@@ -1,40 +1,35 @@
-- name: Copy mongodb repo # ansible copy module
+- name: Copy mongodb repo
   ansible.builtin.copy:
-   src: mongodb.repo
-   dest: /etc/yum.repos.d/mongo.repo
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
 
-- name: Install mongodb # ansible install package 
+
+- name: Install mongodb client
   ansible.builtin.package:
-   name: mongodb-org-shell
-   state: present   
-          
-       
-- name: get the catalogue count # product_count 0
-  ansible.builtin.command:  mongo --host mongodb.rajesh76.online quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+    name: mongodb-org-shell
+    state: present
+
+
+- name: "get the catalogue entries count"
+  ansible.builtin.shell:  mongo --host {{MONGODB_HOST}} --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
   register: products_count
   when: component == "catalogue"
 
-- name: get the user count # product_count 0
-  ansible.builtin.command:  mongo --host mongodb.rajesh76.online quiet --eval 'db = db.getSiblingDB("user"); db.products.count()'
-  register: products_count
+- name: "get the user entries count"
+  ansible.builtin.shell:  mongo --host {{MONGODB_HOST}} --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+  register: users_count
   when: component == "user"
 
-  #  - name: print the count # print value
-  #    ansible.builtin.debug:
-  #     msg: "product count: {{product_count}}"
+# - name: print the count
+#   ansible.builtin.debug:
+#     msg: "entries count: {{entries_count}}"
 
 - name: "load catalogue data"
   ansible.builtin.shell: "mongo --host {{MONGODB_HOST}} < /app/schema/{{component}}.js"
   when: component == "catalogue" and products_count.stdout == "0"  # keep double quotes
   #ignore_errors: true
-
+  
 - name: "load user data"
   ansible.builtin.shell: "mongo --host {{MONGODB_HOST}} < /app/schema/{{component}}.js"
   when: component == "user" and users_count.stdout == "0"  # keep double quotes
   #ignore_errors: true
-
-  
-
-
-  
- 
