@@ -1,8 +1,13 @@
 - name: Add user roboshop # ansible adduseer module
   ansible.builtin.user:
-   name: roboshop 
+   name: roboshop
 
-- name: Recursively create app directory # ansible app directory
+- name: Recursively delete old app directory # ansible app directory
+  ansible.builtin.file:
+   path: /app
+   state: absent   
+
+- name: create app directory # ansible app directory
   ansible.builtin.file:
    path: /app
    state: directory    
