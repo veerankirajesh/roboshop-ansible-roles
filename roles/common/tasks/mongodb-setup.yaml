@@ -23,11 +23,11 @@
   #    ansible.builtin.debug:
   #     msg: "product count: {{product_count}}"
 
-- name: load catalogue data
+- name: "load catalogue data"
   ansible.builtin.command: mongo --host mongodb.rajesh76.online < /app/schema/{{component}}.js
   when: component == "catalogue" and products_count.stdout == "0"  # keep double quotes
 
-- name: load user data
+- name:  "load user data"
   ansible.builtin.command: mongo --host mongodb.rajesh76.online < /app/schema/{{component}}.js
   when: component == "user" and products_count.stdout == "0"  # keep double quotes
 
