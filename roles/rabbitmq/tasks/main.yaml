@@ -1,19 +1,22 @@
-- name: enable redis # no module 
-  ansible.builtin.command:  dnf module enable redis:remi-6.2 -y  
+- name: configure yum erlang repos
+  ansible.builtin.shell: curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | bash
 
-- name: Install redis # ansible dnf install packages
+- name: configure yum rabbitmq repos
+  ansible.builtin.shell: curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | bash
+
+- name: install rabbitmq server
   ansible.builtin.dnf:
-    name: redis 
-    state: present  
+    name: rabbitmq-server
+    state: present
 
-- name: allow remote conncetions # ansible replace module 
-  ansible.builtin.replace:
-    path: /etc/redis.conf
-    regexp: '127.0.0.1'
-    replace: '0.0.0.0 '  
-
-- name: start and enable redis # ansible start&enable module 
+- name: start and enable rabbitmq
   ansible.builtin.service:
-    name: redis
+    name: rabbitmq-server
     state: restarted
-    enabled: yes      
+    enabled: yes
+
+- name: create rabbitmq user
+  ansible.builtin.command: "rabbitmqctl add_user {{rq_user}} {{rq_password}}"
+
+- name: set permissions
+  ansible.builtin.command: rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
