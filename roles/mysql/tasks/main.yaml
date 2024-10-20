@@ -1,10 +1,10 @@
 - name: disable current version of mysql # disable old verssion
   ansible.builtin.command: dnf module disable mysql -y
 
-- name: setup mysql5.7 repo # ansible copy module
+- name: setup mysql5.7 repo
   ansible.builtin.copy:
-   src: mysql.repo
-   dest: /etc/yum.repos.d/mysql.repo  
+    src: mysql.repo
+    dest: /etc/yum.repos.d/mysql.repo  
 
 - name: Install mysql server # ansible dnf module
   ansible.builtin.package:
