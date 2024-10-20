@@ -1,0 +1,19 @@
+- name: enable redis # no module 
+  ansible.builtin.command:  dnf module enable redis:remi-6.2 -y  
+
+- name: Install redis # ansible dnf install packages
+  ansible.builtin.dnf:
+    name: redis 
+    state: present  
+
+- name: allow remote conncetions # ansible replace module 
+  ansible.builtin.replace:
+    path: /etc/redis.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0 '  
+
+- name: start and enable redis # ansible start&enable module 
+  ansible.builtin.service:
+    name: redis
+    state: restarted
+    enabled: yes      
