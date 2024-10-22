@@ -9,10 +9,10 @@
   tags:
   - deployment
   ansible.builtin.file:
-    path: /app
+    path: /app/*
     state: absent
-    #force: yes
-    #recurse: yes
+    force: yes
+    recurse: yes
 
 # - name: create app directory
 #   tags:
