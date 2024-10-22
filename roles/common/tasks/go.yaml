@@ -6,6 +6,7 @@
 - name: build go application
   ansible.builtin.command: "{{item}}"
   loop:
+  - rm /app/go.mod
   - go mod init dispatch
   - go get
   - go build
