@@ -12,7 +12,7 @@
     path: /app/*
     state: absent
     force: yes
-    recurse: yes
+    #recurse: yes
 
 # - name: create app directory
 #   tags:
